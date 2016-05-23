@@ -1,0 +1,8 @@
+在EXCEL表中按格式写入以下数据或者更多，保存为.csv格式
+Name,SamAccountName,UserPrincipalName,GivenName,Surname,DisplayName,Path
+Amy,Amy,Amy@cloudaddin.com,Amy,Amy,Amy,"ou=test,dc=cloudaddin,dc=com"
+bob,bob,bob@cloudaddin.com,bob,bob,bob,"ou=test,dc=cloudaddin,dc=com"
+
+
+在powershell中输入以下命令
+Import-Csv c:\adduser.csv | foreach { New-ADUser -Name $_.name -SamAccountName $_.samaccountname -UserPrincipalName $_.userprincipalname -GivenName $_.givenname -Surname $_.surname -DisplayName $_.displayname -Path $_.path-AccountPassword (ConvertTo-SecureString "pwd" -AsPlainText -Force) -ChangePasswordAtLogon $true -Enabled $true}
