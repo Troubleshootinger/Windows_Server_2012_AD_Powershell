@@ -21,8 +21,8 @@ $Surname=Read-Host "Please enter Last Name"
 $DisplayName=Read-Host "Please enter Display Name"
 $Path=read-host "Please enter Path (Prompt: example.com According to the actual domain name to define) [Example: `"ou=Organization unit,dc=example,dc=com`"]"
 $Passwd=read-host "Please enter passwd Password length must be more than 7 bits, the password complexity includes (letters, numbers, special symbols)"
-"Name,UserPrincipalName,GivenName,Surname,DisplayName,Path" >> "$test_path"
-"$Name,$UserPrincipalName,$GivenName,$Surname,$DisplayName,$Path" >> "$test_path" 
-Import-Csv $test_path | foreach { New-ADUser -Name $_.name -UserPrincipalName $_.userprincipalname -GivenName $_.givenname -Surname $_.surname -DisplayName $_.displayname -Path $_.path -AccountPassword (ConvertTo-SecureString "$Passwd" -AsPlainText -Force) -CannotChangePassword $true -PasswordNeverExpires $true -Enabled $true } 
-Remove-Item $test_path
+"Name,UserPrincipalName,GivenName,Surname,DisplayName,Path" >> "$File_path"
+"$Name,$UserPrincipalName,$GivenName,$Surname,$DisplayName,$Path" >> "$File_path" 
+Import-Csv $File_path | foreach { New-ADUser -Name $_.name -UserPrincipalName $_.userprincipalname -GivenName $_.givenname -Surname $_.surname -DisplayName $_.displayname -Path $_.path -AccountPassword (ConvertTo-SecureString "$Passwd" -AsPlainText -Force) -CannotChangePassword $true -PasswordNeverExpires $true -Enabled $true } 
+Remove-Item $File_path
 
