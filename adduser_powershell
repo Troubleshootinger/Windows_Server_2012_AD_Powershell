@@ -6,3 +6,23 @@ bob,bob,bob@cloudaddin.com,bob,bob,bob,"ou=test,dc=cloudaddin,dc=com"
 
 在powershell中输入以下命令
 Import-Csv c:\adduser.csv | foreach { New-ADUser -Name $_.name -SamAccountName $_.samaccountname -UserPrincipalName $_.userprincipalname -GivenName $_.givenname -Surname $_.surname -DisplayName $_.displayname -Path $_.path-AccountPassword (ConvertTo-SecureString "pwd" -AsPlainText -Force) -ChangePasswordAtLogon $true -Enabled $true}
+
+####################################################################
+$Ou=read-host "Whether there are organizational units [yes or no]"
+if ( $Ou -eq 'no' ){
+$Ou_Name=read-host "Please enter Organization unit"
+New-ADOrganizationalUnit -Name $Ou_Name -Path "dc=cloudaddin,dc=com"  -ProtectedFromAccidentalDeletion:$false
+}
+$File_path=read-host "Please enter a file name and file path (Prompt: File name must end with .csv) [Example: C:\file.csv or ... ]"
+$Name=read-host "Please enter a user login name"
+$UserPrincipalName=Read-Host "Please enter UserPrincipalName (Prompt: example.com According to the actual domain name to define) [Example: user_login_name@example.com]"
+$GivenName=read-host "Please enter First Name"
+$Surname=Read-Host "Please enter Last Name"
+$DisplayName=Read-Host "Please enter Display Name"
+$Path=read-host "Please enter Path (Prompt: example.com According to the actual domain name to define) [Example: `"ou=Organization unit,dc=example,dc=com`"]"
+$Passwd=read-host "Please enter passwd Password length must be more than 7 bits, the password complexity includes (letters, numbers, special symbols)"
+"Name,UserPrincipalName,GivenName,Surname,DisplayName,Path" >> "$test_path"
+"$Name,$UserPrincipalName,$GivenName,$Surname,$DisplayName,$Path" >> "$test_path" 
+Import-Csv $test_path | foreach { New-ADUser -Name $_.name -UserPrincipalName $_.userprincipalname -GivenName $_.givenname -Surname $_.surname -DisplayName $_.displayname -Path $_.path -AccountPassword (ConvertTo-SecureString "$Passwd" -AsPlainText -Force) -CannotChangePassword $true -PasswordNeverExpires $true -Enabled $true } 
+Remove-Item $test_path
+
