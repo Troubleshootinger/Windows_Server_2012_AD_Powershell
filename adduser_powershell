@@ -45,12 +45,15 @@ clear-host
 "登录用户 = $(whoami)" 
 "主板厂商 = "+(Get-CimInstance Win32_BaseBoard).Manufacturer
 "CPU信息 = "+(Get-CimInstance CIM_Processor).name
+"硬盘型号 = "+(get-disk).FriendlyName
 "磁盘大小 = $("{0} GB " -f [math]::truncate($disk.Size / 1GB))"
 "操作系统 = "+(Get-CimInstance Win32_OperatingSystem).caption
 "系统架构 = "+(Get-CimInstance Win32_OperatingSystem).OSArchitecture
 "物理内存 = $([Math]::Round($memory,2)) GB"
 "可用内存 = {0} GB" -f ([math]::round(($ops.FreePhysicalMemory / (1mb)), 2)) 
-"IP地址 =$($IP[1])"
+"网卡型号 = "+(Get-NetAdapter -Name * -Physical).InterfaceDescription
+"MAC地址 = "+(Get-NetAdapter -Name * -Physical).MacAddress
+"I P地址 =$($IP[1])"
 "域名名称 = $Local_domain"
 "计算机名 = $Computer_name"
 "本机时间 = $(date)"
@@ -68,5 +71,8 @@ clear-host
 #'防火墙状态 = 防火墙已开启'
 #}
 ########################################
+
+
+
 
 
