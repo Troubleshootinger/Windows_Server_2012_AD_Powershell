@@ -26,3 +26,47 @@ $Passwd=read-host "Please enter passwd Password length must be more than 7 bits,
 Import-Csv $File_path | foreach { New-ADUser -Name $_.name -UserPrincipalName $_.userprincipalname -GivenName $_.givenname -Surname $_.surname -DisplayName $_.displayname -Path $_.path -AccountPassword (ConvertTo-SecureString "$Passwd" -AsPlainText -Force) -CannotChangePassword $true -PasswordNeverExpires $true -Enabled $true } 
 Remove-Item $File_path
 
+
+
+
+
+
+###############################################################################
+#枚举计算机信息脚本
+$Local_domain="{0}.{1}" -f $env:computername, $env:userdnsdomain
+$Computer_name=$env:computername	
+$IP=(ipconfig|findstr "IPv4") -split ":"
+$memory=(Get-WmiObject -Class Win32_ComputerSystem).TotalPhysicalMemory /1gb
+$ops = Get-WmiObject -Class Win32_OperatingSystem
+$disk = Get-disk| Select-Object Size
+clear-host
+
+
+"登录用户 = $(whoami)" 
+"主板厂商 = "+(Get-CimInstance Win32_BaseBoard).Manufacturer
+"CPU信息 = "+(Get-CimInstance CIM_Processor).name
+"磁盘大小 = $("{0} GB " -f [math]::truncate($disk.Size / 1GB))"
+"操作系统 = "+(Get-CimInstance Win32_OperatingSystem).caption
+"系统架构 = "+(Get-CimInstance Win32_OperatingSystem).OSArchitecture
+"物理内存 = $([Math]::Round($memory,2)) GB"
+"可用内存 = {0} GB" -f ([math]::round(($ops.FreePhysicalMemory / (1mb)), 2)) 
+"IP地址 =$($IP[1])"
+"域名名称 = $Local_domain"
+"计算机名 = $Computer_name"
+"本机时间 = $(date)"
+
+################慎用####################
+#$MpsSvc=Get-Service MpsSvc            
+#If($MpsSvc.Status -eq 'running')      
+#{                                     
+#$MpsSvc | Stop-Service               
+#'防火墙状态 = 防火墙已关闭'              
+#}
+#elseIf($MpsSvc.Status -eq 'Stopped')
+#{
+# $MpsSvc | Start-Service
+#'防火墙状态 = 防火墙已开启'
+#}
+########################################
+
+
