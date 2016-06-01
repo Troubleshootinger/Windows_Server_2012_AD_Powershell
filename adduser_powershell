@@ -33,7 +33,7 @@ Remove-Item $File_path
 
 ###############################################################################
 #枚举计算机信息脚本
-$Local_domain="{0}.{1}" -f $env:computername, $env:userdnsdomain
+$Local_domain=((ping localhost -a -n 1)[1] ).split()[1]
 $Computer_name=$env:computername	
 $IP=(ipconfig|findstr "IPv4") -split ":"
 $memory=(Get-WmiObject -Class Win32_ComputerSystem).TotalPhysicalMemory /1gb
